@@ -9,13 +9,15 @@ def format_time(utc):
     return datetime.strftime(utc, "%B %d, %Y")
 
 def format_time_ago(value, unit):
+    """ pluralizes time unit if necessary """
+
     if value == 1:
         return f'1 {unit} ago'
     return f'{value} {unit}s ago'
 
 def time_ago(utc):
-    """ 
-    Gets delta of time, in appropriate units 
+    """
+    Gets delta of time, in appropriate units
      - Less than hour expressed in minutes
      - Less than day = hours
      - Less than week = days

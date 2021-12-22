@@ -19,7 +19,8 @@ def new():
     if form.validate_on_submit():
         raw = request.form['editor']
         html = markdown_into_sanitized_html(raw)
-        article = Article(title=form.title.data, html_content=html, raw=raw, user_id=current_user.id)
+        article = Article(title=form.title.data, html_content=html,
+                          raw=raw, user_id=current_user.id)
         db.session.add(article)
         db.session.commit()
         flash('Your article has been created', 'success')
@@ -27,7 +28,7 @@ def new():
     return render_template('new.html', form=form)
 
 
-@app.route('/edit/<string:article_id>', methods=['GET', 'POST'])
+@app.route('/edit/<int:article_id>', methods=['GET', 'POST'])
 @login_required
 def edit(article_id):
     article = Article.query.get_or_404(article_id)
@@ -48,8 +49,17 @@ def edit(article_id):
         form.editor.data = article.raw
     return render_template('edit.html',form=form)
 
-
-
+@app.route('/delete/<int:article_id>', methods=['GET', 'POST'])
+@login_required
+def delete(article_id):
+    article = Article.query.get_or_404(article_id)
+    if current_user.username != article.author.username:
+        flash('You do not have permission to delete this article', 'warning')
+        return redirect(url_for('article_page', article_id=article_id))
+    db.session.delete(article)
+    db.session.commit()
+    flash('Article deleted.', 'danger')
+    return redirect(url_for('home'))
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -58,7 +68,7 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username=form.username.data, email=form.email.data, 
+        user = User(username=form.username.data, email=form.email.data,
                     password=hashed_password)
         db.session.add(user)
         db.session.commit()
@@ -108,9 +118,9 @@ def user(username):
         elif request.method == 'GET':
             form.email.data = current_user.email
             form.bio.data = current_user.bio
-        return render_template('user.html', user=user, form=form, 
+        return render_template('user.html', user=user, form=form,
                                 format_time=format_time, is_owner=True, articles=articles)
-    return render_template('user.html', user=user, format_time=format_time, 
+    return render_template('user.html', user=user, format_time=format_time,
                             is_owner=False, articles=articles)
 
 

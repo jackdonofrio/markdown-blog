@@ -1,3 +1,5 @@
+""" web app database models """
+
 from markdown_blog import db, login_manager
 from datetime import datetime
 from flask_login import UserMixin
@@ -13,8 +15,8 @@ class User(db.Model, UserMixin):
     articles = db.relationship('Article', backref='author', lazy=True)
 
     def user_image(self):
-        """ 
-        just gonna use identicons, because of uniqueness + 
+        """
+        just gonna use identicons, because of uniqueness +
         not dealing with potential file saving / uploading issues
         """
 

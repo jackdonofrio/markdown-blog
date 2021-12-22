@@ -18,6 +18,7 @@
     <div class="row col-md-12">
         <div class="col-md-10">
             <a href="{{ url_for('edit', article_id=article.id) }}" class="btn btn-primary">Edit</a>
+            <a href="{{ url_for('delete', article_id=article.id) }}" class="btn btn-danger">Delete</a>
         </div>
     </div>
 {% endif %}
