@@ -1,0 +1,81 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <div class="row col-md-12">
+        <div class="col-md-4">
+            <h3>
+                {% if is_owner %}
+                    Your Profile
+                {% else %}
+                    {{user.username}}'s Profile
+                {% endif %}
+            </h3>
+            <hr>
+            <div class="media">
+                <img class="identicon" src="{{user.user_image()}}">
+                <h3 class="username">{{ user.username }}</h3>
+                <div class="media-body">
+                    {% if is_owner %}
+                        <p class="text-info userdata">{{ current_user.email }}</p>
+                    {% endif %}
+                    <p class="userdata">Joined: {{ format_time(user.joindate) }}</p>
+                    <p class="userdata">Bio: {{ user.bio }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <h3>
+                {% if is_owner %}
+                    Your Posts
+                {% else %}
+                    Posts by {{user.username}}
+                {% endif %}
+            </h3>
+            <hr>
+            {% for article in articles %}
+                <span><a href="{{ url_for('article_page', article_id=article.id) }}">{{article.title}}</a> <small class="text-muted">{{format_time(article.date_posted)}}</small></span>
+                <br>
+            {% endfor %}
+        </div>
+    </div>
+    {% if is_owner %}
+        <div class="row col-md-12">
+            <div class="col-sm-3">
+                <legend>Update Account</legend>
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    <fieldset class="form-group">
+                        <div class="form-group">
+                            {{ form.email.label }}
+                            {% if form.email.errors %}
+                                {{ form.email(class="form-control") }}
+                                <div class="text-danger">
+                                    {% for error in form.email.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.email(class="form-control") }}
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.bio.label }}
+                            {% if form.bio.errors %}
+                                {{ form.bio(class="form-control") }}
+                                <div class="text-danger">
+                                    {% for error in form.bio.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.bio(class="form-control") }}
+                            {% endif %}
+                        </div>
+                    </fieldset>
+                    <div class="form-group">
+                        {{ form.submit(class="btn btn-sm btn-success") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+{% endblock content %}

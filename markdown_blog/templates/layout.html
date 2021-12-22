@@ -1,0 +1,77 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+     {{ mde.css }}
+    <title>markdown blog</title>
+
+    <!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+  <!-- custom template styles -->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='style.css') }}">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  </head>
+
+  <body>
+  	<div class="container">
+	    <!-- https://getbootstrap.com/docs/3.4/examples/navbar/ HELPFUL LINK -->
+      <!-- Static navbar -->
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="{{ url_for('home') }}">markdown-blog</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-left">
+              <li><a href="{{ url_for('all') }}">articles</a></li>
+              {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('new') }}">new article</a></li>
+                <li><a href="{{ url_for('logout') }}">logout</a></li>
+              {% else %}
+                <li><a href="{{ url_for('register') }}">sign up</a></li>
+                <li><a href="{{ url_for('login') }}">login</a></li>
+              {% endif %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('user', username=current_user.username) }}">account</a></li>
+              {% endif %}
+              <li><a href="{{ url_for('about') }}">about</a></li>
+              <li><a href="https://www.github.com/jackdonofrio">contribute</a></li> 
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <main role="main" class="container">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      <div class="row">
+        {% block content %}
+        {% endblock %}
+    </main>
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="col-md-12">
+    <h1>articles</h1>
+    <hr>
+    {% for article in articles.items %}
+        <div class="row">
+            <div class="col-md-12">
+                <a href="{{ url_for('user', username=article.author.username) }}"><img class="identicon-sm" src="{{article.author.user_image()}}"></a>
+                <a href="{{ url_for('article_page', article_id=article.id) }}">{{ article.title }}</a> by <a href="{{ url_for('user', username=article.author.username) }}">{{ article.author.username }}</a> 
+                <small>{{ time_ago(article.date_posted) }}</small> 
+                <!-- add hover over with precise date/time -->
+            </div>
+        </div>
+    {% endfor %}
+    <br>
+    {% for page_number in articles.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_number %}
+            {% if articles.page == page_number %}
+                <a class="btn btn-primary">{{ page_number }}</a>
+            {% else %}
+                <a class="btn btn-default" href="{{ url_for('all', page=page_number) }}">{{ page_number }}</a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
+</div>
+{% endblock content %}

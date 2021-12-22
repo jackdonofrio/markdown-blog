@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="row col-md-12">
+    <div class="col-md-12">
+        <h1>{{ article.title }}</h1>
+        <p class="text-muted">
+            <a href="{{ url_for('user', username=article.author.username) }}"><img class="identicon" src="{{article.author.user_image()}}"></a>
+            <a href="{{ url_for('user', username=article.author.username) }}">{{article.author.username}}</a> <small class="text-muted">{{ format_time(article.date_posted) }}</small>
+        </p>
+        <hr>
+        <div class="make-pretty">
+            {{article.html_content|safe}}
+        </div>
+    </div>
+</div>
+{% if current_user.is_authenticated 
+    and current_user.username == article.author.username %}
+    <div class="row col-md-12">
+        <div class="col-md-10">
+            <a href="{{ url_for('edit', article_id=article.id) }}" class="btn btn-primary">Edit</a>
+        </div>
+    </div>
+{% endif %}
+{% endblock content %}

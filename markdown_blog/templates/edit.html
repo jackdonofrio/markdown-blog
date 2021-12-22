@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="col-md-7">
+    <h2>Edit article</h2>
+    <hr>
+    <body>
+        <form method="POST">
+            <h3>Title</h3>
+            {{ form.title(class="form-control") }}
+            <h3>Editor</h3>
+            {{ form.csrf_token }}
+            {{ form.editor }}
+            {{ form.submit(class="btn btn-success") }}
+        </form>
+        <h3>Article preview</h3>
+        {{ mde.preview }}
+        {{ mde.js }}
+    </body>
+</div>
+{% endblock content %}

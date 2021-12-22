@@ -1,0 +1,27 @@
+.navbar {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.identicon {
+  height: 35px;
+  width: 35px;
+  margin-right: 7px;
+}
+.identicon-sm {
+  height: 30px;
+  width: 30px;
+  margin-right: 7px;
+}
+
+.username {
+  display: inline;
+}
+
+.userdata {
+  margin-left: 47px;
+}
+
+.row {
+  margin-bottom: 5px;
+}
