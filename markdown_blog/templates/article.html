@@ -13,13 +13,102 @@
         </div>
     </div>
 </div>
-{% if current_user.is_authenticated 
-    and current_user.username == article.author.username %}
+{% if current_user.is_authenticated %}
+    {% if current_user.username == article.author.username %}
+        <div class="row col-md-12">
+            <div class="col-md-10">
+                <a href="{{ url_for('edit', article_id=article.id) }}" class="btn btn-default">edit</a>
+                <a href="{{ url_for('delete_post', article_id=article.id) }}" class="btn btn-danger">delete</a>
+            </div>
+        </div>
+    {% endif %}
     <div class="row col-md-12">
-        <div class="col-md-10">
-            <a href="{{ url_for('edit', article_id=article.id) }}" class="btn btn-primary">Edit</a>
-            <a href="{{ url_for('delete', article_id=article.id) }}" class="btn btn-danger">Delete</a>
+        <div class="col-md-5">
+            <legend>Leave a comment</legend>
+            <form method="POST" action="">
+                {{ new_form.hidden_tag() }}
+                <fieldset class="form-group">
+                    <div class="form-group">
+                        {% if new_form.message.errors %}
+                            {{ new_form.message(class="form-control") }}
+                            <div class="text-danger">
+                                {% for error in new_form.message.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ new_form.message(class="form-control") }}
+                        {% endif %}
+                    </div>
+                </fieldset>
+                <div class="form-group">
+                    {{ new_form.submit(class="btn btn-sm btn-success") }}
+                </div>
+            </form>
+        </div>
+    </div>
+{% else %}
+    <div class="row col-md-12">
+        <div class="col-md-5">
+            <small class="text-muted"><a href="{{url_for('login')}}">login</a> to leave a comment</small>
         </div>
     </div>
 {% endif %}
+<div class="row col-md-12">
+    <div class="col-md-12">
+        <legend>Comments</legend>
+    </div>
+</div>
+{% for comment in comments %}
+    <div class="row col-md-12">
+        <div class="col-md-10">
+            <p class="text-muted">
+                <a href="{{ url_for('user', username=comment.author.username) }}"><img class="identicon" src="{{comment.author.user_image()}}"></a>
+                <a href="{{ url_for('user', username=comment.author.username) }}">{{comment.author.username}}</a> <small class="text-muted">{{ time_ago(comment.date_posted) }}</small>
+            </p>
+            <!-- check isn't necessary, since it's already done in routes, thought i'd still include it -->
+            {% if edit_id and is_comment_to_edit(edit_id, comment.id) 
+                and current_user.is_authenticated 
+                    and comment.author.username == current_user.username %} 
+                <div id="editing"></p>
+                <form method="POST" action="">
+                    {{ edit_form.hidden_tag() }}
+                    <div class="row col-md-5">
+                        <fieldset class="form-group">
+                            <div class="form-group">
+                                {% if edit_form.message.errors %}
+                                    {{ edit_form.message(class="form-control") }}
+                                    <div class="text-danger">
+                                        {% for error in edit_form.message.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ edit_form.message(class="form-control") }}
+                                {% endif %}
+                            </div>
+                        </fieldset>
+                        <div class="form-group">
+                            <a class="btn btn-sm btn-default" href="{{ url_for('article_page', article_id=comment.parent.id) }}">Cancel</a>
+                            {{ edit_form.submit(class="btn btn-sm btn-success") }}
+                        </div>
+                    </div>
+                </form>
+                <script>
+                    document.getElementById('editing').scrollIntoView();
+                </script>
+            {% else %}
+                <p>
+                    {{comment.message}}
+                </p>
+                {% if current_user.is_authenticated and comment.author.username == current_user.username %}
+                    <div class="row col-md-10">
+                        <a href="{{ url_for('article_page', article_id=article.id, editing=comment.id) }}" class="btn btn-sm btn-default">edit</a>
+                        <a href="{{ url_for('delete_comment', comment_id=comment.id) }}" class="btn btn-sm btn-danger">delete</a>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>  
+    </div>
+{% endfor %}
 {% endblock content %}

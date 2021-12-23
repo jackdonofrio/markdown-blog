@@ -14,6 +14,7 @@
         </div>
     {% endfor %}
     <br>
+    <small class="text-muted">Page</small>
     {% for page_number in articles.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
         {% if page_number %}
             {% if articles.page == page_number %}

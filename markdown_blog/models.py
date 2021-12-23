@@ -13,6 +13,7 @@ class User(db.Model, UserMixin):
     joindate = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     bio = db.Column(db.String(100), nullable=False, default="A blogger")
     articles = db.relationship('Article', backref='author', lazy=True)
+    comments = db.relationship('Comment', backref='author', lazy=True)
 
     def user_image(self):
         """
@@ -26,7 +27,6 @@ class User(db.Model, UserMixin):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-
 class Article(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(50), nullable=False, default='Untitled Article')
@@ -34,3 +34,11 @@ class Article(db.Model):
     raw = db.Column(db.Text, nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    comments = db.relationship('Comment', backref='parent', cascade='all, delete', lazy=True)
+
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    message = db.Column(db.Text, nullable=False)
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    article_id = db.Column(db.Integer, db.ForeignKey('article.id'), nullable=False)
