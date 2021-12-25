@@ -17,36 +17,38 @@
     {% if current_user.username == article.author.username %}
         <div class="row col-md-12">
             <div class="col-md-10">
-                <a href="{{ url_for('edit', article_id=article.id) }}" class="btn btn-default">edit</a>
-                <a href="{{ url_for('delete_post', article_id=article.id) }}" class="btn btn-danger">delete</a>
+                <a href="{{ url_for('edit', article_id=article.id) }}" class="btn btn-sm btn-default">edit</a>
+                <a href="{{ url_for('delete_post', article_id=article.id) }}" class="btn btn-sm btn-danger">delete</a>
             </div>
         </div>
     {% endif %}
-    <div class="row col-md-12">
-        <div class="col-md-5">
-            <legend>Leave a comment</legend>
-            <form method="POST" action="">
-                {{ new_form.hidden_tag() }}
-                <fieldset class="form-group">
+    {% if not edit_id %}
+        <div class="row col-md-12">
+            <div class="col-md-5">
+                <legend>Leave a comment</legend>
+                <form method="POST" action="">
+                    {{ new_form.hidden_tag() }}
+                    <fieldset class="form-group">
+                        <div class="form-group">
+                            {% if new_form.message.errors %}
+                                {{ new_form.message(class="form-control") }}
+                                <div class="text-danger">
+                                    {% for error in new_form.message.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ new_form.message(class="form-control") }}
+                            {% endif %}
+                        </div>
+                    </fieldset>
                     <div class="form-group">
-                        {% if new_form.message.errors %}
-                            {{ new_form.message(class="form-control") }}
-                            <div class="text-danger">
-                                {% for error in new_form.message.errors %}
-                                    <span>{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ new_form.message(class="form-control") }}
-                        {% endif %}
+                        {{ new_form.submit(class="btn btn-sm btn-success") }}
                     </div>
-                </fieldset>
-                <div class="form-group">
-                    {{ new_form.submit(class="btn btn-sm btn-success") }}
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
+    {% endif %}
 {% else %}
     <div class="row col-md-12">
         <div class="col-md-5">
@@ -89,7 +91,7 @@
                             </div>
                         </fieldset>
                         <div class="form-group">
-                            <a class="btn btn-sm btn-default" href="{{ url_for('article_page', article_id=comment.parent.id) }}">Cancel</a>
+                            <a class="btn btn-sm btn-default" href="{{ url_for('article_page', article_id=comment.parent.id) }}">cancel</a>
                             {{ edit_form.submit(class="btn btn-sm btn-success") }}
                         </div>
                     </div>

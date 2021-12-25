@@ -10,6 +10,7 @@
             <h3>Editor</h3>
             {{ form.csrf_token }}
             {{ form.editor }}
+            <a class="btn btn-default" href="{{ url_for('article_page', article_id=article_id) }}">Cancel</a>
             {{ form.submit(class="btn btn-success") }}
         </form>
         <h3>Article preview</h3>

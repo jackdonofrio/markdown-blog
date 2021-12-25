@@ -84,7 +84,7 @@ def edit(article_id):
     elif request.method == 'GET':
         form.title.data = article.title
         form.editor.data = article.raw
-    return render_template('edit.html',form=form)
+    return render_template('edit.html',form=form, article_id=article_id)
 
 @app.route('/delete_post/<int:article_id>')
 @login_required

@@ -58,7 +58,7 @@ class UpdateAccountForm(FlaskForm):
 
     email = StringField('Email', validators=[DataRequired(), Email()])
     bio = TextAreaField('Bio', validators=[Length(max=100)])
-    submit = SubmitField('Update')
+    submit = SubmitField('update')
 
     def validate_email(self, email):
         """ checks whether email is available """
@@ -81,4 +81,4 @@ class CommentForm(FlaskForm):
     """ fields for commenting on posts """
 
     message = TextAreaField('Comment', validators=[DataRequired(), Length(max=5000)])
-    submit = SubmitField('Submit')
+    submit = SubmitField('submit')

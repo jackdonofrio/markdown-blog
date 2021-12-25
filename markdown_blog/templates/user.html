@@ -4,9 +4,9 @@
         <div class="col-md-4">
             <h3>
                 {% if is_owner %}
-                    Your Profile
+                    Your profile
                 {% else %}
-                    {{user.username}}'s Profile
+                    {{user.username}}'s profile
                 {% endif %}
             </h3>
             <hr>
@@ -25,7 +25,7 @@
         <div class="col-md-4">
             <h3>
                 {% if is_owner %}
-                    Your Posts
+                    Your posts
                 {% else %}
                     Posts by {{user.username}}
                 {% endif %}
@@ -40,7 +40,7 @@
     {% if is_owner %}
         <div class="row col-md-12">
             <div class="col-sm-3">
-                <legend>Update Account</legend>
+                <legend>Update account</legend>
                 <form method="POST" action="">
                     {{ form.hidden_tag() }}
                     <fieldset class="form-group">
