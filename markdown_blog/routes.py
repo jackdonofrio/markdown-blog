@@ -1,3 +1,5 @@
+import datetime
+
 from flask import render_template, request, flash, redirect, url_for
 from flask_login import login_user, logout_user, current_user, login_required
 from markdown_blog import app, db, bcrypt
@@ -9,9 +11,32 @@ from markdown_blog.utils import format_time, time_ago, markdown_into_sanitized_h
 @app.route('/')
 @app.route('/home')
 def home():
-    # fill in with stuff idk
-    
-    return render_template('home.html')
+
+
+    # pick random post based on d
+    today = datetime.date.today()
+    date_product = today.year * today.month * today.day
+    articles_today = Article.query.filter(Article.date_posted >= today).all()
+    if len(articles_today) == 0:
+        selected_article = None
+    else:
+        # will have the effect of picking a 'random' post from each day, consistent thru entire day
+        selected_article = articles_today[date_product % len(articles_today)]
+
+    # NOTE: determine whether post of day will be like wikipedia: random post each day
+    #       or a post that was literally posted on this day
+
+    # User of the day is like how wikipedia does it - random post, regardless of date posted
+    all_users = User.query.all()
+    if len(all_users) == 0:
+        selected_user = None
+    else:
+        selected_user = all_users[date_product % len(all_users)]
+        
+
+
+    return render_template('home.html', article=selected_article, user=selected_user, 
+        time_ago=time_ago, format_time=format_time)
 
 @app.route('/new', methods=['GET', 'POST'])
 @login_required

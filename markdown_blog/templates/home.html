@@ -15,9 +15,33 @@
     </div>
     <div class="col-md-4">
         <legend>Post of the day</legend>
+        {% if article == None %}
+            No articles have been posted today.
+        {% else %}
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="{{ url_for('user', username=article.author.username) }}"><img class="identicon-sm" src="{{article.author.user_image()}}"></a>
+                    <a href="{{ url_for('article_page', article_id=article.id) }}">{{ article.title }}</a> by <a href="{{ url_for('user', username=article.author.username) }}">{{ article.author.username }}</a> 
+                    <!-- <small>{{ time_ago(article.date_posted) }}</small>  -->
+                    <!-- add hover over with precise date/time -->
+                </div>
+            </div>
+        {% endif %}
     </div>
     <div class="col-md-4">
         <legend>User of the day</legend>
+        {% if user == None %}
+            No users exist. 
+        {% else %}
+            <div class="media">
+                <img class="identicon" src="{{user.user_image()}}">
+                <h3 class="username"><a href="{{ url_for('user', username=user.username) }}">{{ user.username }}</a></h3>
+                <div class="media-body">
+                    <p class="userdata">Joined: {{ format_time(user.joindate) }}</p>
+                    <p class="userdata">Bio: {{ user.bio }}</p>
+                </div>
+            </div>
+        {% endif %}
     </div>
 </div>
 {% endblock content %}
