@@ -21,7 +21,7 @@ class User(db.Model, UserMixin):
         not dealing with potential file saving / uploading issues
         """
 
-        return f"https://api.kwelo.com/v1/media/identicon/{self.username}"
+        return f"https://api.dicebear.com/6.x/identicon/svg?seed={self.username}"
 
 @login_manager.user_loader
 def load_user(user_id):
